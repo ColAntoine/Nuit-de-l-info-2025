@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 
 const GRID_SIZE = 10;
 const INITIAL_SNAKE = [{ x: 5, y: 5 }];
@@ -16,20 +16,29 @@ export default function SnakeGame() {
   const [gameOver, setGameOver] = useState(false);
   const [score, setScore] = useState(0);
 
-  const generateFood = useCallback(() => {
-    const newFood = {
-      x: Math.floor(Math.random() * GRID_SIZE),
-      y: Math.floor(Math.random() * GRID_SIZE),
-    };
-    setFood(newFood);
-  }, []);
+  const generateFood = (currentSnake: Position[]) => {
+    let newFood: Position;
+    let isOnSnake = true;
+
+    // Keep generating until we find a position not on the snake
+    while (isOnSnake) {
+      newFood = {
+        x: Math.floor(Math.random() * GRID_SIZE),
+        y: Math.floor(Math.random() * GRID_SIZE),
+      };
+      isOnSnake = currentSnake.some((segment) => segment.x === newFood.x && segment.y === newFood.y);
+    }
+
+    return newFood!;
+  };
 
   const resetGame = () => {
-    setSnake(INITIAL_SNAKE);
+    const newSnake = INITIAL_SNAKE;
+    setSnake(newSnake);
     setDirection(INITIAL_DIRECTION);
     setGameOver(false);
     setScore(0);
-    generateFood();
+    setFood(generateFood(newSnake));
   };
 
   useEffect(() => {
@@ -76,7 +85,7 @@ export default function SnakeGame() {
         // Check if food is eaten
         if (newHead.x === food.x && newHead.y === food.y) {
           setScore((s) => s + 1);
-          generateFood();
+          setFood(generateFood(newSnake));
           return newSnake;
         }
 
@@ -87,7 +96,7 @@ export default function SnakeGame() {
     }, GAME_SPEED);
 
     return () => clearInterval(gameLoop);
-  }, [direction, food, gameOver, generateFood]);
+  }, [direction, food, gameOver]);
 
   return (
     <div className="flex flex-col items-center gap-4">
