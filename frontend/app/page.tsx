@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import SnakeModal from "@/components/SnakeModal";
+import Link from "next/link";
 
 export default function Home() {
   const [isSnakeModalOpen, setIsSnakeModalOpen] = useState(false);
@@ -73,6 +74,13 @@ export default function Home() {
             Play Snake
           </button>
         </div>
+        <Link
+          href="/game"
+          className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-blue-500 px-5 transition-colors hover:bg-blue-500 hover:text-white md:w-[158px]"
+        >
+          Game Page
+        </Link>
+
       </main>
     </div>
     </>
