@@ -90,6 +90,9 @@ class Game {
     cost(n: number) {
         this.money -= n;
     }
+    gain(n: number) {
+        this.money += n;
+    }
     lose_satisfaction(n: number) {
         this.satisfaction -= n;
     }
@@ -97,8 +100,8 @@ class Game {
     setup() {
         this.running = false;
         this.money = GameDefaults.students * Constants.INITIAL_MONEY_PER_STUDENT;
-        this.satisfaction = 0.5;
-        this.teacher_satisfaction = 0.5;
+        this.satisfaction = 0.8;
+        this.teacher_satisfaction = 0.8;
         this.day = 0;
         this.students = 10;
         this.teachers = 1;
