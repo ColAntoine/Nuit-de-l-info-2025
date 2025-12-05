@@ -4,7 +4,7 @@ type StatsCardProps = {
   title: string;
   euros: number;
   students: number;
-  teachers: number;
+  jours: number;
   studentSatisfaction: number; 
   teacherSatisfaction: number;
 };
@@ -13,7 +13,7 @@ export default function StatsCard({
   title,
   euros,
   students,
-  teachers,
+  jours,
   studentSatisfaction,
   teacherSatisfaction,
 }: StatsCardProps) {
@@ -41,8 +41,8 @@ export default function StatsCard({
         </div>
 
         <div className="flex justify-between">
-          <span>Profs</span>
-          <span className="font-semibold">{teachers.toLocaleString("fr-FR")}</span>
+          <span>Jours</span>
+          <span className="font-semibold">{jours.toLocaleString("fr-FR")}</span>
         </div>
 
         <div className="flex justify-between">

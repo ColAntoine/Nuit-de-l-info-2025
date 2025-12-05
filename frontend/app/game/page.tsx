@@ -10,12 +10,11 @@ import { GameInstance } from "@/game/main";
 
 export default function GamePage() {
   GameInstance.setup();
+  GameInstance.begin();
 
   const updates = ["Windows 10", "Ubuntu"];
   const events = ["404 con found", "Apéromix"];
-  const euros = GameInstance.getMoney();
   const students = GameInstance.getStudents();
-  const teachers = GameInstance.getTeachers();
   const studentSatisfaction = GameInstance.getStudentSatisfaction() * 100;
   const teacherSatisfaction = GameInstance.getTeacherSatisfaction() * 100;
 
@@ -23,12 +22,28 @@ export default function GamePage() {
   const [y, setY] = useState(200);
   const [direction, setDirection] = useState<"front" | "back">("front");
 
+  // Éléments de l'UI
+  const [moneyTxt, setMoneyTxt] = useState<number>(GameInstance.getMoney());
+  const [teachersTxt, setTeachersTxt] = useState<number>(GameInstance.getCurrentDay());
+
   // borne A (haut) et B (bas)
   const minY = 550;
   const maxY = 680;
 
   // ref pour savoir si on va vers le bas (1) ou vers le haut (-1)
   const dirRef = useRef<1 | -1>(1);
+
+  useEffect(() => {
+        const speed = 130;    // ms entre updates UI
+
+        const id = setInterval(() => {
+            // UI update
+            setMoneyTxt(GameInstance.getMoney());
+            setTeachersTxt(GameInstance.getCurrentDay());
+        }, speed);
+
+        return () => clearInterval(id);
+  }, []);
 
   useEffect(() => {
     const speed = 80;    // ms entre updates
@@ -74,9 +89,9 @@ export default function GamePage() {
           <div className="w-[300px]">
             <StatsCard
               title="Statistiques :"
-              euros={euros}
+              euros={moneyTxt}
               students={students}
-              teachers={teachers}
+              jours={teachersTxt}
               studentSatisfaction={studentSatisfaction}
               teacherSatisfaction={teacherSatisfaction}
             />

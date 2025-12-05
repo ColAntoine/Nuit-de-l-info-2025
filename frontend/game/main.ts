@@ -1,8 +1,5 @@
 
 // To be implemented on front-end:
-function open_dialog(title: string, body: string, buttons)
-{}
-
 function on_student_leave()
 {}
 
@@ -31,15 +28,10 @@ function random(base: number, scale: number, drift: number = Constants.RANDOM_DR
 }
 
 class GameEvent {
-    private running: boolean;
-    constructor(public title: string, public body: string, public update: (game: Game) => void) {
+    constructor(public title: string, public body: string, public onEvent: (game: Game) => void) {
         this.title = title;
         this.body = body;
-        this.update = update;
-        this.running = true;
-    }
-    isRunning() {
-        return this.running;
+        this.onEvent = onEvent;
     }
 }
 
@@ -49,11 +41,13 @@ const Events = [
         (game: Game) => {
             const totalPrice = random(300, Math.pow(Constants.TIME_SCALE, game.getCurrentDay()));
             game.cost(totalPrice);
+            // TODO Yes-no form to be implemented
         }),
     new GameEvent("Panne de Cloudflare", "Une panne du service Cloudflare paralyse internet." +
         " Vos étudiants ne sont pas très contents...", (game: Game) => {
             const happinessLoss = random(10, 1);
             game.lose_satisfaction(happinessLoss);
+        // TODO Yes-no form to be implemented
     })
 ]
 
@@ -66,7 +60,7 @@ class Game {
     private teachers: number = 0;
     private day: number = 0;
     private seed: number = 0;
-    private events: GameEvent[] = [];
+    private interval: number|undefined = undefined;
 
     getCurrentDay(){
         return this.day;
@@ -96,17 +90,34 @@ class Game {
 
     setup() {
         this.running = false;
+        this.interval = undefined;
         this.money = GameDefaults.students * Constants.INITIAL_MONEY_PER_STUDENT;
-        this.satisfaction = 0.5;
-        this.teacher_satisfaction = 0.5;
+        this.satisfaction = 0.9;
+        this.teacher_satisfaction = 0.9;
         this.day = 0;
         this.students = 10;
         this.teachers = 1;
         this.seed = 0;
-        this.events = [];
     }
     begin() {
         this.running = true;
+        // @ts-expect-error non-node env
+        this.interval = setInterval(() => {
+            // Game tick
+            if (!this.running)
+                return;
+            const dayLast = this.day;
+            this.day += .1;
+            if (dayLast != Math.floor(this.day)) {
+                // New day!
+                this.next_day();
+            }
+        }, 1000);
+    }
+    end_game() {
+        clearInterval(this.interval);
+        this.running = false;
+        this.interval = undefined;
     }
     add_student() {
         // Check whether the school is deemed "full" or not...
@@ -117,12 +128,18 @@ class Game {
         this.money += Constants.DAILY_MONEY_PER_STUDENT;
     }
     next_day() {
-        this.day += 1;
-        this.money += random(Constants.DAILY_MONEY_PER_STUDENT * this.students, 1, Constants.RANDOM_DRIFT);
-        for (const gameevt of this.events) {
-            if (gameevt.isRunning()) gameevt.update(this);
-        }
+        if (!this.running)
+            return;
+        this.money += Math.floor(random(Constants.DAILY_MONEY_PER_STUDENT * this.students, 1, Constants.RANDOM_DRIFT));
         // Decide if we have a new event
+        if (Math.random() > 0.5) {
+            const newevent = Events[Math.floor(Math.random() * Events.length)];
+            newevent.onEvent(this);
+        }
+        // Have we lost ?
+        if (this.students < 1 || this.money < 1 || this.satisfaction < .01) {
+            this.end_game(); // Game over
+        }
     }
 
 }
