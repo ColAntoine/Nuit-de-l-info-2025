@@ -6,15 +6,18 @@ import StatsCard from "../../components/StatsCard";
 import SpriteCharacter from "../../components/SpriteCharacter";
 import SpriteStudent from "../../components/SpriteStudent";
 import SpriteStudentFront from "../../components/SpriteStudentFront";
+import { GameInstance } from "@/game/main";
 
 export default function GamePage() {
+  GameInstance.setup();
+
   const updates = ["Windows 10", "Ubuntu"];
   const events = ["404 con found", "Apéromix"];
-  const euros = 1200000;
-  const students = 320;
-  const teachers = 28;
-  const studentSatisfaction = 92;
-  const teacherSatisfaction = 88;
+  const euros = GameInstance.getMoney();
+  const students = GameInstance.getStudents();
+  const teachers = GameInstance.getTeachers();
+  const studentSatisfaction = GameInstance.getStudentSatisfaction() * 100;
+  const teacherSatisfaction = GameInstance.getTeacherSatisfaction() * 100;
 
   // position Y du perso
   const [y, setY] = useState(200);
