@@ -61,7 +61,9 @@ class Game {
     private running: boolean = false;
     private money: number = 0;
     private satisfaction: number = 0;
+    private teacher_satisfaction: number = 0;
     private students: number = 0;
+    private teachers: number = 0;
     private day: number = 0;
     private seed: number = 0;
     private events: GameEvent[] = [];
@@ -69,6 +71,22 @@ class Game {
     getCurrentDay(){
         return this.day;
     }
+    getMoney() {
+        return this.money;
+    }
+    getStudents() {
+        return this.students;
+    }
+    getTeachers() {
+        return this.teachers;
+    }
+    getStudentSatisfaction() {
+        return this.satisfaction;
+    }
+    getTeacherSatisfaction() {
+        return this.teacher_satisfaction;
+    }
+
     cost(n: number) {
         this.money -= n;
     }
@@ -80,8 +98,10 @@ class Game {
         this.running = false;
         this.money = GameDefaults.students * Constants.INITIAL_MONEY_PER_STUDENT;
         this.satisfaction = 0.5;
+        this.teacher_satisfaction = 0.5;
         this.day = 0;
         this.students = 10;
+        this.teachers = 1;
         this.seed = 0;
         this.events = [];
     }
@@ -108,7 +128,15 @@ class Game {
 }
 
 const GameInstance: Game = new Game();
-GameInstance.setup();
+
+export {
+    GameInstance,
+    Game,
+    GameEvent,
+    GameDefaults,
+    Events,
+    Constants
+}
 
 /*
 
