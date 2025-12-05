@@ -8,16 +8,16 @@ function on_student_leave()
 
 const GameDefaults = {
     students: 10,
-    money: 200,
+    money: 0,
     day: 0,
     satisfaction: .5
 }
 
 const Constants = {
     DAILY_MONEY_PER_STUDENT: 100,
-    INITIAL_MONEY_PER_STUDENT: 50,
+    INITIAL_MONEY_PER_STUDENT: 1000,
     RANDOM_DRIFT: .05,
-    STUDENTS_MULT: 5,
+    STUDENTS_MULT: 20,
     TIME_SCALE: 1.1
 }
 
@@ -78,7 +78,7 @@ class Game {
 
     setup() {
         this.running = false;
-        this.money = 100;
+        this.money = GameDefaults.students * Constants.INITIAL_MONEY_PER_STUDENT;
         this.satisfaction = 0.5;
         this.day = 0;
         this.students = 10;
