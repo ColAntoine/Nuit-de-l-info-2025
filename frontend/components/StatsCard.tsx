@@ -6,7 +6,6 @@ type StatsCardProps = {
   students: number;
   teachers: number;
   studentSatisfaction: number; 
-  teacherSatisfaction: number;
 };
 
 export default function StatsCard({
@@ -15,7 +14,6 @@ export default function StatsCard({
   students,
   teachers,
   studentSatisfaction,
-  teacherSatisfaction,
 }: StatsCardProps) {
   return (
     <div className="w-full overflow-hidden rounded-xl border border-zinc-300 bg-white shadow-sm dark:border-zinc-700 dark:bg-zinc-900">
@@ -50,10 +48,6 @@ export default function StatsCard({
           <span className="font-semibold">{studentSatisfaction}%</span>
         </div>
 
-        <div className="flex justify-between">
-          <span>Satisfaction des profs</span>
-          <span className="font-semibold">{teacherSatisfaction}%</span>
-        </div>
       </div>
     </div>
   );
